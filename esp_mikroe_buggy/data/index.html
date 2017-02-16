@@ -1,0 +1,23 @@
+<html>
+<head>
+  <title>Makers NS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript">
+    function doDrive(){
+      var xmlHttp = new XMLHttpRequest();
+      var d = document.getElementById('direction').value;
+      var t = document.getElementById('throttle').value;
+      theUrl = "drive?d=" + d + "&t=" + t;
+      xmlHttp.open( "GET", theUrl, false );
+      xmlHttp.send( null );
+      return xmlHttp.responseText;
+    }
+  </script>
+  <style>body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Color: #000088; }</style>
+  </head>
+  <body>
+    <h1>ESP Buggy</h1>
+    <input type="range" style="width: 95%; height: 50px;" id="direction" min="-100" max="100" value="0" step="1" oninput="doDrive()" onchange="doDrive()"/><br>
+    <input type="range" style="width: 95%; height: 50px;" id="throttle" min="-100" max="100" value="0" step="1" oninput="doDrive()" onchange="doDrive()"/>
+  </body>
+</html>
