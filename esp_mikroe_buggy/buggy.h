@@ -21,7 +21,7 @@
 #define THROTTLE_MAX 90
 #define PWM_MIN 190
 #define PWM_MAX 1023
-#define DIRECTION_TRESHOLD 30
+#define DIRECTION_THRESHOLD 30
 #define FULL_PWM_FACTOR 2.55
 
 void setupBuggy();

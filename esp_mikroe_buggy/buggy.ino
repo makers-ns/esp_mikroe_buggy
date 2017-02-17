@@ -50,18 +50,18 @@ void moveBuggy(int direction, int throttle)
 
   if(!movingForwart)
     throttle = - throttle; // we should go in reverse -> flip the sign
-  if(throttle < THROTTLE_TRESHOLD)
+  if(throttle < THROTTLE_THRESHOLD)
   {
     stopBuggy();
     return;
   }
 
-  int leftPWM = map(throttle, THROTTLE_TRESHOLD, THROTTLE_MAX, PWM_MIN, PWM_MAX);
+  int leftPWM = map(throttle, THROTTLE_THRESHOLD, THROTTLE_MAX, PWM_MIN, PWM_MAX);
   int rightPWM = leftPWM;
   
-  if(direction > DIRECTION_TRESHOLD)
+  if(direction > DIRECTION_THRESHOLD)
     rightPWM = 0;
-  if(direction < - DIRECTION_TRESHOLD)
+  if(direction < - DIRECTION_THRESHOLD)
     leftPWM = 0;
 
   leftPWM = constrain(leftPWM, 0, PWM_MAX);
