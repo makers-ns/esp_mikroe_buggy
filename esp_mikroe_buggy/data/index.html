@@ -3,21 +3,45 @@
   <title>Makers NS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script type="text/javascript">
-    function doDrive(){
+    var size = (screen.width < screen.height) ? screen.width : screen.height;
+    var halfSize = size / 2;
+
+    function touchStart(e){ doDrive(e.changedTouches[0].pageX, e.changedTouches[0].pageY); }
+    function touchMove(e){ doDrive(e.changedTouches[0].pageX, e.changedTouches[0].pageY) }
+    function touchEnd(e){ doDrive(halfSize, halfSize); }
+    
+    function doDrive(x, y){
       var xmlHttp = new XMLHttpRequest();
-      var d = document.getElementById('direction').value;
-      var t = document.getElementById('throttle').value;
+      var d = Math.round(100 *(x - halfSize)/halfSize);
+      var t = Math.round(100 *(halfSize - y)/halfSize);
       theUrl = "drive?d=" + d + "&t=" + t;
+      console.log(theUrl);
+      document.getElementById("showURL").innerHTML = theUrl;
       xmlHttp.open( "GET", theUrl, false );
       xmlHttp.send( null );
       return xmlHttp.responseText;
     }
+
+    function initialize(){
+      document.getElementById("remote").innerHTML = "<canvas id=\"remoteCanvas\" width=\"" + size + "\" height=\" " + size + "\"></canvas>";
+      var canvas = document.getElementById('remoteCanvas');
+      console.log(size);
+      var ctx = canvas.getContext("2d");
+      var grd = ctx.createRadialGradient(halfSize, halfSize, 0, halfSize, halfSize, halfSize);
+      grd.addColorStop(0, "red");
+      grd.addColorStop(1, "green");
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, size, size);
+      canvas.addEventListener('touchstart', touchStart, false);
+      canvas.addEventListener('touchend', touchEnd, false);
+      canvas.addEventListener('touchmove', touchMove, false);
+    }
+
   </script>
-  <style>body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Color: #000088; }</style>
+  <style> body { margin: 0px; padding: 0px; } </style>
   </head>
-  <body>
-    <h1>ESP Buggy</h1>
-    <input type="range" style="width: 95%; height: 50px;" id="direction" min="-100" max="100" value="0" step="1" oninput="doDrive()" onchange="doDrive()"/><br>
-    <input type="range" style="width: 95%; height: 50px;" id="throttle" min="-100" max="100" value="0" step="1" oninput="doDrive()" onchange="doDrive()"/>
+  <body onLoad = initialize()>
+    <div id="remote"></div>
+    <p id="showURL"></p>
   </body>
 </html>

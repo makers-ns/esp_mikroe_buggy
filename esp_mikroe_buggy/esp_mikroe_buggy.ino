@@ -23,6 +23,7 @@
 #include <ESP8266mDNS.h>
 #include <FS.h>
 #include <Hash.h>
+#include "buggy.h"
 
 #define AP_MODE 1
 //AP mode 1, WiFi clident 0
@@ -31,80 +32,34 @@
 // WiFi Definitions //
 //////////////////////
 #if AP_MODE
-const char WiFiSSID[] = "esp_buggy1";
-const char WiFiAPPSK[] = "esp_buggy1";
+const char WiFiSSID[] = "espbuggy1";
+const char WiFiAPPSK[] = "espbuggy1";
 #else
 const char* ssid = "yourSSIDhere";
 const char* password = "yourPASShere";
 #endif
-const char host[] = "";
+const char host[] = "buggy";
 
 ESP8266WebServer server(80);
 
 void drive(){
-  int direct, throttle; 
-  int left_attenuation = 0;
-  int right_attenuation = 0;
-  String m = "d ";
+  int direction = 0, throttle = 0; 
   if(server.hasArg("d")) {
-    direct = server.arg("d").toInt();
+    direction = server.arg("d").toInt();
   }
     if(server.hasArg("t")) {
-    throttle = - server.arg("t").toInt();
+    throttle = server.arg("t").toInt();
   }
-
-  if(throttle < 0){
-    if((direct < throttle))
-      direct = throttle;
-    else if((direct > -throttle))
-      direct = -throttle;
-  }
-  else
-    direct = 0;
   
-  Serial.println(m + direct + " t " + throttle);
+  moveBuggy(direction, throttle);
   
-  if(direct > 0)
-    left_attenuation = direct * 10;
-  else
-    right_attenuation = - direct * 10;
-
-  // Move
-  if(throttle > 20){
-    analogWrite(D1, throttle*10 - left_attenuation);
-    analogWrite(D2, throttle*10 - right_attenuation);
-    analogWrite(D3, 0);
-    analogWrite(D4, 0);
-  }
-  else if(throttle < -20){
-    analogWrite(D1, 0);
-    analogWrite(D2, 0);
-    analogWrite(D3, -throttle*10 - left_attenuation);
-    analogWrite(D4, -throttle*10 - right_attenuation);
-  }
-  else{
-    analogWrite(D1, 0);
-    analogWrite(D2, 0);
-    analogWrite(D3, 0);
-    analogWrite(D4, 0);
-  }
   //Must play nice and return 200OK
   server.send(200, "text/plain", server.arg(0));
 }
 
 void setup(void)
 {
-  // We will use 4 output PWMs
-  pinMode(D1, OUTPUT);
-  pinMode(D2, OUTPUT);
-  pinMode(D3, OUTPUT);
-  pinMode(D4, OUTPUT);
-
-  //Make sure that we stand still
-  analogWrite(D1, 0);
-  analogWrite(D2, 0);
-  analogWrite(D3, 0);
-  analogWrite(D4, 0);
+  setupBuggy();
 
   Serial.begin(74880);
   Serial.setDebugOutput(true);
@@ -158,5 +113,4 @@ void setup(void)
 void loop(void)
 {
   server.handleClient();
-  //doTestloop();
 }
