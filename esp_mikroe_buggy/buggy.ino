@@ -46,9 +46,9 @@ void stopBuggy()
  */
 void moveBuggy(int direction, int throttle)
 {
-  int movingForwart = (throttle > 0);
+  int movingForward = (throttle > 0);
 
-  if(!movingForwart)
+  if(!movingForward)
     throttle = - throttle; // we should go in reverse -> flip the sign
   if(throttle < THROTTLE_THRESHOLD)
   {
@@ -71,7 +71,7 @@ void moveBuggy(int direction, int throttle)
   Serial.println(m + direction + " t " + throttle + "\nL " + leftPWM + " R " + rightPWM);
 
   // Move
-  if(movingForwart)
+  if(movingForward)
   {
     analogWrite(D1, 0);
     analogWrite(D2, leftPWM);
