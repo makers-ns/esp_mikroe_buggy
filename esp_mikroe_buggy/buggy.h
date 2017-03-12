@@ -17,7 +17,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 *****************************************************************************/
-#define THROTTLE_TRESHOLD 30
+#define THROTTLE_THRESHOLD 30
 #define THROTTLE_MAX 90
 #define PWM_MIN 190
 #define PWM_MAX 1023
